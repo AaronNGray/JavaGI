@@ -32,7 +32,7 @@ Documentation:
 
 General information on JavaGI can be found in the website
 
-        http://www.informatik.uni-freiburg.de/~wehr/javagi
+http://www.informatik.uni-freiburg.de/~wehr/javagi
 
 The syntax is supported by the JavaGI compiler is pretty close to the
 one used in our ECOOP 2007 paper [1]. The directory
