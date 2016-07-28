@@ -1,0 +1,153 @@
+package javagi.casestudies.servlet;
+
+import java.util.List;
+import java.util.ArrayList;
+
+/** interfaces for HTML generation **/
+
+abstract class Node {
+    abstract public String toXHTML();
+}
+
+class Element extends Node {
+    protected String e;
+    private List<Node> contents;
+    public Element() {
+	contents = new ArrayList<Node>();
+    }
+    public void add(Node x) {
+	contents.add(x);
+    }
+    public String toXHTML () {
+	StringBuffer b = new StringBuffer();
+	b.append("<" + e + ">");
+	for (Node n : contents) 
+	    b.append(n.toXHTML());
+	b.append("</" + e + ">");
+	return b.toString();
+    }    
+}
+
+class CDATA extends Node {
+    private String text;
+    public CDATA (String x) {
+	text = x;
+    }
+    public void setText(String x) {
+	text = x;
+    }
+    public String toXHTML () {
+	StringBuffer b = new StringBuffer ();
+	for (char c : text.toCharArray())
+	    switch (c) {
+	    case '<':
+	    case '&':
+	    case '"':
+		b.append("&#");
+		b.append((int)c);
+		b.append(';');
+		break;
+	    default:
+		b.append(c);
+	    }
+	return b.toString();
+    }
+}
+
+// class Document extends Element {}
+class HTML extends Element { {e = "html";} }
+class HEAD extends Element { {e = "head";} }
+class BODY extends Element { {e = "body";} }
+class TITLE extends Element { {e = "title";} }
+class H1 extends Element { {e = "h1";} }
+class H2 extends Element { {e = "h2";} }
+class P extends Element { {e = "p";} }
+class A extends Element { {e = "a";} }
+class EM extends Element { {e = "em";} }
+class I extends Element { {e = "i";} }
+class B extends Element { {e = "b";} }
+class UL extends Element { {e = "ul";} }
+class OL extends Element { {e = "ol";} }
+class LI extends Element { {e = "li";} }
+class DL extends Element { {e = "dl";} }
+class DT extends Element { {e = "dt";} }
+class DD extends Element { {e = "dd";} }
+class HR extends Element { {e = "hr";} }
+class IMG extends Element { {e = "img";} }
+class TABLE extends Element { {e = "table";} }
+class THEAD extends Element { {e = "thead";} }
+class TH extends Element { {e = "th";} }
+class TBODY extends Element { {e = "tbody";} }
+class TR extends Element { {e = "tr";} }
+class TD extends Element { {e = "td";} }
+
+
+interface Admit [Y, X] {
+    receiver Y {
+	void add(X x);
+    }
+}
+
+implementation Admit [HTML,HEAD]{ receiver HTML { void add(HEAD x) { add(x); }}};
+implementation Admit [HTML,BODY]{ receiver HTML { void add(BODY x) { add(x); }}};
+implementation Admit [HEAD,TITLE]{ receiver HEAD { void add(TITLE x) { add(x); }}};
+implementation Admit [TITLE,CDATA]{ receiver TITLE { void add(CDATA x) { add(x); }}};
+implementation Admit [TH,H1]{ receiver TH { void add(H1 x) { add(x); }}};
+implementation Admit [TD,H1]{ receiver TD { void add(H1 x) { add(x); }}};
+implementation Admit [LI,H1]{ receiver LI { void add(H1 x) { add(x); }}};
+implementation Admit [DD,H1]{ receiver DD { void add(H1 x) { add(x); }}};
+implementation Admit [BODY,H1]{ receiver BODY { void add(H1 x) { add(x); }}};
+implementation Admit [TH,H2]{ receiver TH { void add(H2 x) { add(x); }}};
+implementation Admit [TD,H2]{ receiver TD { void add(H2 x) { add(x); }}};
+implementation Admit [LI,H2]{ receiver LI { void add(H2 x) { add(x); }}};
+implementation Admit [DD,H2]{ receiver DD { void add(H2 x) { add(x); }}};
+implementation Admit [BODY,H2]{ receiver BODY { void add(H2 x) { add(x); }}};
+implementation Admit [TH,P]{ receiver TH { void add(P x) { add(x); }}};
+implementation Admit [TD,P]{ receiver TD { void add(P x) { add(x); }}};
+implementation Admit [LI,P]{ receiver LI { void add(P x) { add(x); }}};
+implementation Admit [DD,P]{ receiver DD { void add(P x) { add(x); }}};
+implementation Admit [BODY,P]{ receiver BODY { void add(P x) { add(x); }}};
+
+implementation Admit [TH,A]{ receiver TH { void add(A x) { add(x); }}};
+implementation Admit [TD,A]{ receiver TD { void add(A x) { add(x); }}};
+implementation Admit [LI,A]{ receiver LI { void add(A x) { add(x); }}};
+implementation Admit [DD,A]{ receiver DD { void add(A x) { add(x); }}};
+implementation Admit [DT,A]{ receiver DT { void add(A x) { add(x); }}};
+implementation Admit [H1,A]{ receiver H1 { void add(A x) { add(x); }}};
+implementation Admit [H2,A]{ receiver H2 { void add(A x) { add(x); }}};
+implementation Admit [BODY,A]{ receiver BODY { void add(A x) { add(x); }}};
+implementation Admit [I,A]{ receiver I { void add(A x) { add(x); }}};
+implementation Admit [B,A]{ receiver B { void add(A x) { add(x); }}};
+implementation Admit [EM,A]{ receiver EM { void add(A x) { add(x); }}};
+
+implementation Admit [TH,EM]{ receiver TH { void add(EM x) { add(x); }}};
+implementation Admit [TD,EM]{ receiver TD { void add(EM x) { add(x); }}};
+implementation Admit [LI,EM]{ receiver LI { void add(EM x) { add(x); }}};
+implementation Admit [DD,EM]{ receiver DD { void add(EM x) { add(x); }}};
+implementation Admit [DT,EM]{ receiver DT { void add(EM x) { add(x); }}};
+implementation Admit [H1,EM]{ receiver H1 { void add(EM x) { add(x); }}};
+implementation Admit [H2,EM]{ receiver H2 { void add(EM x) { add(x); }}};
+implementation Admit [P,EM]{ receiver P { void add(EM x) { add(x); }}};
+implementation Admit [A,EM]{ receiver A { void add(EM x) { add(x); }}};
+implementation Admit [BODY,EM]{ receiver BODY { void add(EM x) { add(x); }}};
+implementation Admit [I,EM]{ receiver I { void add(EM x) { add(x); }}};
+implementation Admit [B,EM]{ receiver B { void add(EM x) { add(x); }}};
+implementation Admit [EM,EM]{ receiver EM { void add(EM x) { add(x); }}};
+
+
+class TestHTML {
+    public static void main(String[]arg) {
+	HTML html = new HTML ();
+	HEAD head = new HEAD ();
+	TITLE title = new TITLE();
+	html.add(head);
+	head.add(title);
+	title.add(new CDATA ("Hello World"));
+	BODY body = new BODY ();
+	H1 h1 = new H1();
+	body.add (h1);
+	h1.add (new CDATA ("Hello World"));
+
+	System.out.println(html.toXHTML());
+    }
+}

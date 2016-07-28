@@ -1,0 +1,180 @@
+Methods:
+--------
+
+JLS 8.4:
+
+// added ConstraintList_opt
+MethodHeader: MethodModifiers_opt TypeParameters_opt ResultType MethodDeclarator
+                  Throws_opt ConstraintList_opt
+=> OK
+
+
+Constraints:
+------------
+
+JLS 4.4:
+
+// added implements alternative
+TypeBound: 'extends' ClassOrInterfaceType AdditionalBoundList_opt
+         | 'implements' InterfaceType AdditionalImplementsBoundList_opt  // NEW
+=> OK
+
+// NEW
+AdditionalImplementsBoundList: '&' InterfaceType
+                             | AdditionalImplementsBoundList '&' InterfaceType
+=> OK
+
+// NEW
+ConstraintList: Constraint
+           | ConstraintList ',' Constraint
+
+// NEW
+Constraint: 'where' Type TypeBound
+          | 'where' ImplTypeList 'implements' InterfaceType
+=> OK
+
+// NEW
+ImplTypeList: ReferenceType
+            | ImplTypeList '&' ReferenceType
+=> OK
+
+
+Interface declarations:
+-----------------------
+
+JLS 9.1:
+
+// added ConstraintList_opt, ImplParameters_opt
+NormalInterfaceDeclaration:
+    InterfaceModifiers_opt 'interface' Identifier TypeParameters_opt ImplParameters_opt
+                                ExtendsInterfaces_opt ConstraintList_opts InterfaceBody
+=> OK
+
+Side note: it is a compile-time error if ImplParameters and ExtendsInterfaces are both given.
+
+// NEW
+ImplParameters: '[' IdentifierList 'where' ConstraintList ']'
+=> OK
+
+Side note: only 'implements' constraints allowed in ConstraintList
+
+JLS 9.1.4
+
+FIXME: default methods missing
+
+// added ReceiverDeclaration
+InterfaceMemberDeclaration:
+    ConstantDeclaration
+  | AbstractMethodDeclaration
+  | ClassDeclaration
+  | InterfaceDeclaration
+  | ReceiverDeclaration             // NEW
+=> OK
+
+// NEW
+ReceiverDeclaration: 'receiver' Identifier ReceiverBody
+=> OK
+
+// NEW
+ReceiverBody: '{' AbstractMethodDeclarations_opt '}
+=> OK
+
+Side note: no AbstractMethodDeclaration in ReceiverBody may be 'static'
+
+JLS 9.4
+// added ConstraintList_opt
+AbstractMethodDeclaration:
+    AbstractMethodModifiers_opt TypeParameters_opt ResultType MethodDeclarator 
+        Throws_opt ConstraintList_opt
+=> OK
+
+
+// extended to allow 'static'
+AbstractMethodModifier: one of
+    Annotation 'public' 'abstract' 'static'
+=> OK
+
+
+Class declarations:
+-------------------
+
+JLS 8.1:
+
+// added ConstraintList_opt
+NormalClassDeclaration:
+    ClassModifiers_opt 'class' Identifier TypeParameters_opt Super_opt Interfaces_opt
+        ConstraintList_opt ClassBody
+=> OK
+
+
+Implementation declarations:
+----------------------------
+
+FIXME: abstract/public implementations missing
+
+// NEW
+ImplementationDeclaration: 'implementation' TypeParameters_opt InterfaceType ImplTypes
+                     ConstraintList_opt ImplBody
+=> OK
+
+// NEW
+ImplTypes: '[' ClassTypeList ']
+=> OK
+
+// NEW
+ClassTypeList: ClassType
+             | ClassTypeList ',' ClassType
+=> OK
+
+// NEW
+ImplBody: '{' ImplBodyDeclarations_opt '}'
+=> OK
+
+// NEW
+ImplBodyDeclarations:
+    ImplBodyDeclaration
+    ImplBodyDeclarations ImplBodyDeclaration
+=> OK
+
+// NEW
+ImplBodyDeclaration: MethodDeclaration
+                   | ReceiverImpl
+=> OK
+
+// NEW
+ReceiverImpl: 'receiver' ClassType ReceiverImplBody
+=> OK
+
+// NEW
+ReceiverImplBody: '{' MethodDeclarationList_opt '}
+=> OK
+
+// NEW
+MethodDeclarationList:
+    MethodDeclaration
+  | MethodDeclarationList MethodDeclaration
+=> OK
+
+
+Expressions:
+------------
+
+JLS 15.12
+
+MethodInvocation:
+    ...
+  | InterfaceType '[' ClassTypeList ']' '.' NonWildTypeArguments_opt Identifier 
+      '(' ArgumentList_opt ')'
+=> OK
+
+
+Types:
+------
+
+WildcardBounds:
+    extends ReferenceType
+    super ReferenceType
+    implements InterfaceType
+=> OK
+
+FIXME: interface intersection types missing

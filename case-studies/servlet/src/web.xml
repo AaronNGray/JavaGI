@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+    version="2.4">
+  
+  <display-name>JavaGI Servlet CaseStudy</display-name>
+
+  <context-param>
+    <param-name>javagi.rt.logfile</param-name>
+    <param-value>/home/wehr/workspace/JavaGICompiler/case-studies/servlet/log/javagi.log</param-value>
+  </context-param>
+
+  <context-param>
+    <param-name>javagi.rt.loglevel</param-name>
+    <param-value>FINEST</param-value>
+  </context-param>
+  
+  <servlet>
+    <servlet-name>HelloWorld</servlet-name>
+    <servlet-class>javagi.casestudies.servlet.HelloWorld</servlet-class>
+  </servlet>
+    
+  <servlet-mapping>
+    <servlet-name>HelloWorld</servlet-name>
+    <url-pattern>/HelloWorld</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>Register</servlet-name>
+    <servlet-class>javagi.casestudies.servlet.Register</servlet-class>
+  </servlet>
+    
+  <servlet-mapping>
+    <servlet-name>Register</servlet-name>
+    <url-pattern>/register</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>RegisterSubmit</servlet-name>
+    <servlet-class>javagi.casestudies.servlet.RegisterSubmit</servlet-class>
+  </servlet>
+    
+  <servlet-mapping>
+    <servlet-name>RegisterSubmit</servlet-name>
+    <url-pattern>/register-submit</url-pattern>
+  </servlet-mapping>
+
+</web-app>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="src" output="benchmarks/interpreter/java/build" path="benchmarks/interpreter/java/src"/>
+	<classpathentry kind="src" output="build/java-benchmarks" path="src/java-benchmarks"/>
+	<classpathentry kind="src" output="build/java-rt" path="src/java-rt"/>
+	<classpathentry kind="src" output="build/java-test" path="src/java-test"/>
+	<classpathentry kind="con" path="ch.epfl.lamp.sdt.launching.SCALA_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.apache.ant_1.7.0.v200803061910/lib/ant.jar"/>
+	<classpathentry kind="lib" path="build/scala" sourcepath="src/scala"/>
+	<classpathentry kind="lib" path="lib/bcel-5.3-SNAPSHOT.jar" sourcepath="lib/bcel-5.3-SNAPSHOT-src.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="lib" path="case-studies/xpath/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="case-studies/xpath/lib/jdom.jar"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="output" path="build/java"/>
+</classpath>

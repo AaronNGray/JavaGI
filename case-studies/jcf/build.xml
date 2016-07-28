@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="servlet-case-study" default="build" basedir=".">
+
+  <property name="build.compiler" value="javagi.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+  <property name="javagi.rt" value="../../build/java-rt"/>
+
+  <!-- we do a clean before every build because otherwise the compiler
+       reads already compiled classes from .class files, which is not
+       good because we do not store JavaGI-specific extensions in .class
+       files yet.
+  -->
+  <target name="build" depends="clean">
+    <mkdir dir="build"/>
+    <javac destdir="build"
+           classpath="${javagi.rt}"
+           debug="true"
+           source="1.6"
+           target="1.6">
+      <src path="src"/>
+      <include name="**/*.java"/>
+      <exclude name="MisUse.java"/>
+      <compilerarg line="-Xemacs -Xlint:none -nowarn"/>
+    </javac>
+  </target>
+
+  <target name="build-misuse" depends="clean">
+    <mkdir dir="build"/>
+    <javac destdir="build"
+           classpath="${javagi.rt}"
+           debug="true"
+           source="1.6"
+           target="1.6">
+      <src path="src"/>
+      <include name="**/*.java"/>
+      <compilerarg line="-Xemacs -Xlint:none -nowarn"/>
+    </javac>
+  </target>
+
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+</project>

@@ -1,0 +1,32 @@
+#!/bin/bash
+
+FILE="`readlink -e \"$0\"`"
+TOP=$(cd "`dirname \"$FILE\"`/.."; pwd -P)
+THIS=$(cd "`dirname \"$FILE\"`"; pwd -P)
+
+source "$TOP/config.sh"
+
+LAUNCHER=javagi.runtime.Main
+
+if [ ! -z "$JAVAGI_OPT_STANDARD_LOADER" ]
+then
+    CLASSPATH="$CLASSPATH:$TOP/build/java-rt" $JAVA_CMD "$@"
+    exit $?
+else
+    # FIXME
+    java_opts=""
+    while [ "${1:0:1}" = "-" ] 
+    do
+	java_opts="$java_opts $1"
+	if [ "$1" = "-classpath" -o "$1" = "-cp" ]
+	then
+	    shift
+	    java_opts="$java_opts $1"
+	    shift
+	else
+	    shift
+	fi
+    done
+    CLASSPATH="$CLASSPATH:$TOP/build/java-rt" $JAVA_CMD $java_opts $LAUNCHER "$@"
+    exit $?
+fi

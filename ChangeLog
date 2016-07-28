@@ -1,0 +1,58 @@
+2009-12-07 Stefan Wehr
+	* release 0.7.0
+	* Support for use of 'super' inside implementation definitions
+	  with a super implementation definition
+	* Support for abstract methods in implementations	
+          (Because of time pressure, I did not implement support for
+	   implementations of multi-headed interfaces.It should be,
+	   however, only a matter of coding to add support for abstract
+	   methods in implementations of multi-headed interfaces.)
+	* Support for omission of empty receivers
+	* Fixed soundness bug for wildcards
+
+2006-07-27 Stefan Wehr
+	* release 0.6.0
+	* Wf-Prog-9 is now part of the downward-closed well-formedness criterion,
+	  Wf-Prog-10 thus became Wf-Prog-9
+	* Bugfixes
+	
+2009-06-19 Stefan Wehr
+	* release 0.5.0
+	* support for explicit coercions through abstract implementations
+	* receivers are now automatically ordered by the compiler
+	* support for implementation definitions that retrieve methods
+	  directly from the implementing type
+	* support for ignoring certain implementations at runtime
+	* dropped support for implementation definitions with constraints on interfaces
+	  with static methods
+	* fixed covariant return type bug
+	* several minor changes required by the Eclipse plugin
+	* various bug fixes
+	
+2009-04-04 Stefan Wehr
+	* release 0.4.0
+	* restrictions for implementations with interfaces as implementing types
+	* bugfixes
+
+2009-03-25 Stefan Wehr
+	* release 0.3.0
+	* performance tweaking
+	* benchmarks
+	* many bugfixes
+	* changed syntax of constraints on multi-headed interface: the 
+	  separator is now "*" instead of "&"
+	* windows support
+	
+2009-03-04 Stefan Wehr
+	* release 0.2.0
+	* support for implementation inheritance
+	* support for abstract implementation definitions
+	* support for explicitly named implementation definitions
+	* experimental support for implementation definitions with interface types
+	  as implementing types
+	* many bugfixes
+	* case studies
+	* performance tweaking
+	
+2009-02-09 Stefan Wehr
+	* initial release 0.1.0

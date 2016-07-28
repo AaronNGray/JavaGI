@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="servlet-case-study" default="build" basedir=".">
+
+  <property name="build.compiler" value="javagi.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+  <!-- Configure the context path for this application -->
+  <property name="path"     value="/javagi"/>
+  <property name="war.file" value="javagi.war"/>
+  <property name="javagi.rt" value="../../build/java-rt"/>
+
+  <!-- Configure properties to access the Manager application -->
+  <property name="url"      value="http://localhost:8080/manager"/>
+  <property name="username" value="tomcat-manager"/>
+  <property name="password" value="mns34Addfapioer3"/>
+
+  <!-- Configure the custom Ant tasks for the Manager application -->
+  <taskdef name="deploy"    classname="org.apache.catalina.ant.DeployTask"/>
+  <taskdef name="list"      classname="org.apache.catalina.ant.ListTask"/>
+  <taskdef name="reload"    classname="org.apache.catalina.ant.ReloadTask"/>
+  <taskdef name="resources" classname="org.apache.catalina.ant.ResourcesTask"/>
+  <taskdef name="roles"     classname="org.apache.catalina.ant.RolesTask"/>
+  <taskdef name="start"     classname="org.apache.catalina.ant.StartTask"/>
+  <taskdef name="stop"      classname="org.apache.catalina.ant.StopTask"/>
+  <taskdef name="undeploy"  classname="org.apache.catalina.ant.UndeployTask"/>
+
+  <target name="build" depends="clean">
+    <mkdir dir="build"/>
+    <mkdir dir="build/WEB-INF"/>
+    <mkdir dir="build/WEB-INF/classes"/>
+    <mkdir dir="build/WEB-INF/lib"/>
+    <javac destdir="build/WEB-INF/classes"
+           classpath="lib/servlet-api.jar:${javagi.rt}"
+           debug="true"
+           source="1.6"
+           target="1.6">
+      <src path="src"/>
+      <include name="**/*.java"/>
+      <compilerarg line="-Xemacs -Xlint:none"/>
+    </javac>
+    <!--
+    <schemavalidate noNamespaceFile="src/web-app_2_4.xsd"
+                    file="src/web.xml"/>
+		    -->
+    <copy file="src/web.xml" todir="build/WEB-INF"/>
+    <!--
+    <copy todir="build/WEB-INF/lib">
+      <fileset dir="lib" includes=""/>
+    </copy>
+    -->
+    <copy todir="build/WEB-INF/classes">
+      <fileset dir="${javagi.rt}" includes="**/*.class"/>
+    </copy>
+  </target>
+
+  <target name="restart" depends="build">
+    <exec executable="/home/wehr/usr/apache-tomcat-5.5.17/restart.sh"/>
+  </target>
+
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+</project>

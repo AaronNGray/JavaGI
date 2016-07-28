@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="servlet-case-study" default="build" basedir=".">
+
+  <property name="build.compiler" value="javagi.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+  <property name="javagi.rt" value="../../build/java-rt"/>
+
+  <target name="build" depends="clean">
+    <mkdir dir="build"/>
+    <javac destdir="build"
+           classpath="${javagi.rt}"
+           debug="true"
+           source="1.6"
+           target="1.6">
+      <src path="src"/>
+      <include name="**/*.java"/>
+      <compilerarg line="-Xemacs -Xlint:none"/>
+    </javac>
+    <mkdir dir="build/icons"/>
+    <copy todir="build/icons">
+      <fileset dir="icons"/>
+    </copy>
+  </target>
+
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+</project>

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+FILE="`readlink -e \"$0\"`"
+TOP=$(cd "`dirname \"$FILE\"`/.."; pwd -P)
+THIS=$(cd "`dirname \"$FILE\"`"; pwd -P)
+
+source "$TOP/config.sh"
+
+main_class=javagi.eclipse.jdt.internal.compiler.batch.Main
+
+if [ "$1" = "-jdb" ] ; then
+    echo "Running javagic under jdb (unter 'run' to start the compiler)"
+    export JAVACMD=jdb
+    shift
+fi
+export JAVA_OPTS="-Xss1024k $JAVA_OPTS"
+$SCALA_CMD $SCALA_OPTS -classpath "$TOP/build/java:$TOP/build/scala:$TOP/lib/bcel-5.3-SNAPSHOT.jar" "$main_class" "$@"
+exit $?

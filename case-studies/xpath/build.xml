@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="servlet-case-study" default="build" basedir=".">
+
+  <property name="build.compiler" value="javagi.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+  <property name="javagi.rt" value="../../build/java-rt"/>
+  <property name="junit.jar" value="../../lib/junit-3.8.2.jar"/>
+
+  <!-- we do a clean before every build because otherwise the compiler
+       reads already compiled classes from .class files, which is not
+       good because we do not store JavaGI-specific extensions in .class
+       files yet.
+  -->
+  <target name="build" depends="clean">
+    <mkdir dir="build"/>
+    <javac srcdir="src" destdir="build">
+      <compilerarg line="-version"/>
+    </javac>
+    <javac destdir="build"
+           classpath="${javagi.rt}:lib/jaxen-1.1.1.jar:lib/dom4j-1.6.1.jar:lib/jdom.jar:${junit.jar}"
+           debug="true"
+           source="1.6"
+           target="1.6">
+      <src path="src"/>
+      <include name="**/*.java"/>
+      <compilerarg line="-Xemacs -Xlint:none -nowarn"/>
+      <!--
+      <compilerarg line="-Xemacs -Xlint:none -nowarn -Xlog type-checker:debug,stack-trace:Returning|Setting"/>
+      -->
+    </javac>
+  </target>
+
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+</project>

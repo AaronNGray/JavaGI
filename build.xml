@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="javagic" default="build" basedir=".">
+
+  <!-- taskdef for the scala tools -->
+  <taskdef resource="scala/tools/ant/antlib.xml">
+    <classpath>
+      <pathelement location="${scala.home}/lib/scala-compiler.jar"/>
+      <pathelement location="${scala.home}/lib/scala-library.jar"/>
+    </classpath>
+  </taskdef>
+
+  <property name="out.dir" value="build" />
+  <property name="java.out.dir" value="build/java" />
+  <property name="java.test.out.dir" value="build/java-test" />
+  <property name="java.rt.out.dir" value="build/java-rt" />
+  <property name="java.benchmarks.out.dir" value="build/java-benchmarks" />
+  <property name="scala.out.dir" value="build/scala" />
+  <property name="src.dir" value="src" />
+  <property name="java.src.dir" value="src/java" />
+  <property name="java.test.src.dir" value="src/java-test" />
+  <property name="java.rt.src.dir" value="src/java-rt" />
+  <property name="java.benchmarks.src.dir" value="src/java-benchmarks" />
+  <property name="scala.src.dir" value="src/scala" />
+  <property name="jar.file" value="${out.dir}/ecj.jar" />
+  <property name="bcel.lib" value="lib/bcel-5.3-SNAPSHOT.jar" />
+  <property name="libs" value="${bcel.lib}" />
+  <property name="dist.dir" value="dist"/>
+
+  <target name="build">
+    <mkdir dir="${out.dir}" />
+    <mkdir dir="${java.test.out.dir}" />
+    <mkdir dir="${java.rt.out.dir}" />
+    <mkdir dir="${java.benchmarks.out.dir}" />
+    <mkdir dir="${java.out.dir}" />
+    <mkdir dir="${scala.out.dir}" />
+    <echo>=== Running the Scala compiler ===</echo>
+    <scalac destdir="${scala.out.dir}"
+            classpath="${libs}"
+            force="changed"
+            addparams="-g:vars -deprecation -unchecked">
+<!--
+            addparams="-g:vars -deprecation -unchecked -verbose -Ylog-all">
+-->
+<!--
+            addparams="-g:vars -deprecation -unchecked -verbose -Ydebug -Ylog-all">
+-->
+      <src path="${java.src.dir}"/>
+      <include name="**/*.java"/>
+      <src path="${scala.src.dir}"/>
+      <include name="**/*.scala"/>
+    </scalac>
+    <echo>=== Running the Java compiler ===</echo>
+    <javac destdir="${java.out.dir}"
+           classpath="${libs}:${scala.out.dir}:${scala.home}/lib/scala-library.jar"
+           debug="true"
+           source="1.6"
+           target="1.6">
+      <src path="${java.src.dir}"/>
+      <include name="**/*.java"/>
+      <compilerarg line="-Xlint:none"/>
+    </javac>
+    <javac destdir="${java.test.out.dir}"
+           classpath="lib/junit-3.8.2.jar"
+           debug="true"
+           source="1.6"
+           target="1.6">
+      <src path="${java.test.src.dir}"/>
+      <src path="${java.rt.src.dir}"/>
+      <include name="javagi/compiler/test/*.java"/>
+      <!-- DOES NOT WORK!
+           <include name="javagi/runtime/*Test.java"/>
+      -->
+      <compilerarg line="-Xlint:none"/>
+    </javac>
+    <javac destdir="${java.rt.out.dir}"
+           debug="true"
+           source="1.6"
+           target="1.6">
+      <src path="${java.rt.src.dir}"/>
+      <include name="**/*.java"/>
+      <exclude name="**/*Test.java"/>
+      <compilerarg line="-Xlint:none"/>
+    </javac>
+    <javac destdir="${java.benchmarks.out.dir}"
+           debug="true"
+           source="1.6"
+           target="1.6">
+      <src path="${java.benchmarks.src.dir}"/>
+      <include name="**/*.java"/>
+      <exclude name="**/*Test.java"/>
+      <compilerarg line="-Xlint:none"/>
+    </javac>
+    <echo>=== Running the Scala compiler ===</echo>
+    <scalac destdir="${scala.out.dir}" 
+            classpath="${libs}:${java.out.dir}"
+            force="changed"
+            addparams="-g:vars -deprecation">
+      <src path="${scala.src.dir}"/>
+      <include name="**/*.scala"/>
+    </scalac>
+    <copy todir="${java.out.dir}">
+      <fileset dir="${java.src.dir}">
+        <include name="**/*.rsc"/>
+        <include name="**/*.properties"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="get-version">
+    <java classname="javagi.compiler.Version" fork="true" classpath="${java.out.dir}" outputproperty="javagi.version"/>
+  </target>
+
+  <target name="src-dist" depends="get-version">
+    <java classname="javagi.compiler.Version" fork="true" classpath="${java.out.dir}" outputproperty="javagi.version"/>
+    <delete dir="${dist.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <exec executable="svn">
+      <arg line="export . ${dist.dir}/javagi-src-${javagi.version}"/>
+    </exec>
+    <delete>
+      <fileset dir="${dist.dir}/javagi-src-${javagi.version}"
+               includes="design_decisions.txt, next.txt, TODO, howto.txt, STATUS"/>
+    </delete>
+    <delete dir="${dist.dir}/javagi-src-${javagi.version}/benchmarks"/>
+    <delete dir="${dist.dir}/javagi-src-${javagi.version}/tests"/>
+    <delete dir="${dist.dir}/javagi-src-${javagi.version}/tools"/>
+    <delete dir="${dist.dir}/javagi-src-${javagi.version}/releases"/>
+    <exec executable="tar" dir="${dist.dir}">
+      <arg line="cfz ../javagi-src-${javagi.version}.tar.gz javagi-src-${javagi.version}"/>
+    </exec>
+  </target>
+
+  <target name="src-dist-plugin" depends="get-version">
+<!--  	<mkdir dir="build/scalasrc"/>
+  	<copy toDir="build/scalasrc">
+  	    <fileset dir="src/scala/">
+  	    	<include name="**"/>
+  	    </fileset>
+  		<mapper type="glob" from="*.scala" to="*.java"/>
+  	</copy>
+  	-->
+    <jar destfile="javagi.compiler.src-${javagi.version}.jar" 
+    	 basedir=".">
+      <include name="src/java/**"/>
+      <include name="src/java-benchmarks/**"/>
+      <include name="src/java-rt/**"/>
+      <include name="src/java-test/**"/>
+      <include name="src/scala/**"/>
+      <manifest>
+        <attribute name="Built-By" value="${user.name}"/>
+        <attribute name="Implementation-Title" value="JavaGI Sources"/>
+        <attribute name="Implementation-Version" value="${javagi.version}"/>
+      	<attribute name="Bundle-SymbolicName" value="javagi.compiler.source"/>
+      	<attribute name="Eclipse-SourceBundle" 
+  value="javagi.compiler;version=&quot;${javagi.version}&quot;;roots:=&quot;src/java,src/java-benchmarks,src/scala&quot;,javagi.rt;version=&quot;${javagi.version}&quot;;roots=&quot;src/java-rt&quot;"/>
+      	<attribute name="Bundle-Localization" value="plugin"/>
+      	<attribute name="Bundle-ManifestVersion" value="2"/>
+      </manifest>
+    </jar>
+  	<!--<delete dir="build/scalasrc"></delete>-->
+  </target>
+
+	
+  <target name="bin-dist" depends="get-version">
+  	<taskdef resource="aQute/bnd/ant/taskdef.properties" classpath="lib/bnd-0.0.313.jar"/> 
+
+  	<jar destfile="javagi-rt-${javagi.version}.jar"
+         basedir="${java.rt.out.dir}"
+         includes="**/*.class"
+         excludes="**/*Test.class">
+      <manifest>
+        <attribute name="Main-Class" value="javagi.runtime.Main"/>
+        <attribute name="Built-By" value="${user.name}"/>
+        <attribute name="Implementation-Title" value="JavaGI Runtime System"/>
+        <attribute name="Implementation-Version" value="${javagi.version}"/>
+      </manifest>
+    </jar>
+  	
+    <bndwrap jars="javagi-rt-${javagi.version}.jar" 
+    	     output="${basedir}"
+    	     failok="false" 
+    	     definitions="${basedir}/src/bnd"/> 
+  	<delete file="javagi-rt-${javagi.version}.jar"/>
+  	<move file="javagi-rt-${javagi.version}.bar" toFile="javagi-rt-${javagi.version}.jar" />
+  	
+    <jar destfile="javagic-${javagi.version}.jar">
+      <fileset dir="${java.out.dir}">
+        <include name="**/*.rsc"/>
+        <include name="**/*.properties"/>
+        <include name="**/*.class"/>
+      </fileset>
+      <fileset dir="${scala.out.dir}" includes="**/*.class"/>
+      <zipfileset src="${scala.home}/lib/scala-library.jar"/>
+      <zipfileset src="${bcel.lib}"/>
+      <manifest>
+        <attribute name="Main-Class" value="javagi.eclipse.jdt.internal.compiler.batch.Main"/>
+        <attribute name="Built-By" value="${user.name}"/>
+        <attribute name="Implementation-Title" value="JavaGI Compiler"/>
+        <attribute name="Implementation-Version" value="${javagi.version}"/>
+      </manifest>
+    </jar>
+  	
+  	<bndwrap jars="javagic-${javagi.version}.jar" 
+  	             output="${basedir}"
+  	             failok="false" 
+  	             definitions="${basedir}/src/bnd"/> 
+  	<delete file="javagic-${javagi.version}.jar"/>
+  	<move file="javagic-${javagi.version}.bar" toFile="javagic-${javagi.version}.jar" />
+  	
+  </target>
+
+  <target name="dist" depends="src-dist, bin-dist"/>
+
+  <target name="clean">
+    <delete dir="${out.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+</project>
